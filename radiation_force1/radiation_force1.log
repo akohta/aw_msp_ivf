@@ -1,0 +1,34 @@
+./radiation_force1.out 
+
+ "mpw.txt" No.00 -- planewave --
+medium density                   [kg/m^3] :            1000
+speed of sound in the medium        [m/s] :            1500
+frequency                            [Hz] :          100000
+sound pressure amplitude             [Pa] :     10+      0I
+x-component of translation vector     [m] :               0
+y-component of translation vector     [m] :               0
+z-component of translation vector     [m] :               0
+rotation parameter theta            [rad] :               0
+rotation parameter psi              [rad] :               0
+-- additional information --
+wavelength                            [m] :           0.015
+absolute value of sound intensity [W/m^2] : 3.3333333333333e-05
+x-component of sound intensity    [W/m^2] :               0
+y-component of sound intensity    [W/m^2] :               0
+z-component of sound intensity    [W/m^2] : 3.3333333333333e-05
+
+---- sphere data ( msphr.txt ) ----
+number of spheres                             :                1
+  Sphere ID 0
+medium density                       [kg/m^3] :              970
+speed of sound in the medium            [m/s] :             1004
+radius of sphere                              :            0.005
+x-coordinate of sphere center                 :                0
+y-coordinate of sphere center                 :                0
+z-coordinate of sphere center                 :                0
+basic sampling number on sphere surface       :               64
+division number for sphere surface    (per PI):                2
+limit of order number l                       :               40
+
+150/150
+done
