@@ -172,7 +172,7 @@ void output_node_particles(char *fname,AMSP *ms)
   FILE *fp;
   double a,st,ct,sp,cp,x,y,z;
   int s1,s2,oid,i,j;
-  char *sd,fo[128]="";
+  char *sd,fo[128]="",tmp[128]="";
 
   sd=strrchr(fname,'.');
   if(sd==NULL){ // no file extension
@@ -181,8 +181,8 @@ void output_node_particles(char *fname,AMSP *ms)
   else {
     s1=strlen(fname);
     s2=strlen(sd);
-    strncpy(fo,fname,s1-s2);
-    sprintf(fo,"%s.particles",fo);
+    strncpy(tmp,fname,s1-s2);
+    sprintf(fo,"%s.particles",tmp);
   }
   
   if((fp=fopen(fo,"wt"))==NULL){    printf("Can not open the %s file.\n",fo);    exit(1);  }
