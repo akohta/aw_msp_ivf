@@ -7,25 +7,75 @@ void read_data_amsp(AMSP *ms)
   int num,nc;
   
   if((fp=fopen(fn_sphr,"rt"))==NULL){    printf("Can not open the '%s' file. Exit...\n",fn_sphr);    exit(1);  }
-  fgets(buf,256,fp);  fgets(buf,256,fp);
+  if(fgets(buf,256,fp)==NULL){
+    printf("aw_msp_ivf.c, read_data_amsp(), failed to read the line. exit...\n");
+    exit(1);
+  }
+  if(fgets(buf,256,fp)==NULL){
+    printf("aw_msp_ivf.c, read_data_amsp(), failed to read the line. exit...\n");
+    exit(1);
+  }
 
-  fscanf(fp,"%d\n",&ti);   num=ti;
+  if(fscanf(fp,"%d\n",&ti)!=1){
+    printf("aw_msp_ivf.c, read_data_amsp(), failed to read the num. exit...\n");
+    exit(1);
+  }
+  num=ti;
   if(num==0){    printf("No sphere defined. Exit...\n"); exit(1);  }
-  fgets(buf,256,fp);
+  if(fgets(buf,256,fp)==NULL){
+    printf("aw_msp_ivf.c, read_data_amsp(), failed to read the line. exit...\n");
+    exit(1);
+  }
 
   ms->n_sphr=num;
   ms->sp=(ASP *)m_alloc2(num,sizeof(ASP),"read_data_amsp(), sm->sp");
   
   for(nc=0;nc<num;nc++){
-    fscanf(fp,"%lf",&td);  ms->sp[nc].rho0=td;
-    fscanf(fp,"%lf",&td);  ms->sp[nc].c0=td;
-    fscanf(fp,"%lf",&td);  ms->sp[nc].a =td;
-    fscanf(fp,"%lf",&td);  ms->sp[nc].cx=td;
-    fscanf(fp,"%lf",&td);  ms->sp[nc].cy=td;
-    fscanf(fp,"%lf",&td);  ms->sp[nc].cz=td;
-    fscanf(fp,"%d",&ti);   ms->sp[nc].bsn=ti;
-    fscanf(fp,"%d",&ti);   ms->sp[nc].bdv=ti;
-    fscanf(fp,"%d\n",&ti);   ms->sp[nc].l_limit=ti;
+    if(fscanf(fp,"%lf",&td)!=1){
+      printf("aw_msp_ivf.c, read_data_amsp(), failed to read the rho0. exit...\n");
+      exit(1);
+    }
+    ms->sp[nc].rho0=td;
+    if(fscanf(fp,"%lf",&td)!=1){
+      printf("aw_msp_ivf.c, read_data_amsp(), failed to read the c0. exit...\n");
+      exit(1);
+    }
+    ms->sp[nc].c0=td;
+    if(fscanf(fp,"%lf",&td)!=1){
+      printf("aw_msp_ivf.c, read_data_amsp(), failed to read the a. exit...\n");
+      exit(1);
+    }
+    ms->sp[nc].a =td;
+    if(fscanf(fp,"%lf",&td)!=1){
+      printf("aw_msp_ivf.c, read_data_amsp(), failed to read the cx. exit...\n");
+      exit(1); 
+    }
+    ms->sp[nc].cx=td;
+    if(fscanf(fp,"%lf",&td)!=1){
+      printf("aw_msp_ivf.c, read_data_amsp(), failed to read the cy. exit...\n");
+      exit(1);
+    }
+    ms->sp[nc].cy=td;
+    if(fscanf(fp,"%lf",&td)!=1){
+      printf("aw_msp_ivf.c, read_data_amsp(), failed to read the cz. exit...\n");
+      exit(1);
+    }
+    ms->sp[nc].cz=td;
+    if(fscanf(fp,"%d",&ti)!=1){
+      printf("aw_msp_ivf.c, read_data_amsp(), failed to read the bsn. exit...\n");
+      exit(1);
+    }
+    ms->sp[nc].bsn=ti;
+    if(fscanf(fp,"%d",&ti)!=1){
+      printf("aw_msp_ivf.c, read_data_amsp(), failed to read the bdv. exit...\n");
+      exit(1);
+    }
+    ms->sp[nc].bdv=ti;
+    if(fscanf(fp,"%d\n",&ti)!=1){
+      printf("aw_msp_ivf.c, read_data_amsp(), failed to read the l_limit. exit...\n");
+      exit(1);
+    }
+    ms->sp[nc].l_limit=ti;
   }
   
   fclose(fp);
@@ -171,18 +221,19 @@ void output_node_particles(char *fname,AMSP *ms)
 {
   FILE *fp;
   double a,st,ct,sp,cp,x,y,z;
-  int s1,s2,oid,i,j;
-  char *sd,fo[128]="",tmp[128]="";
+  int s1,oid,i,j;
+  char *sd,fo[256]={},tf[200]={};
 
-  sd=strrchr(fname,'.');
-  if(sd==NULL){ // no file extension
-    sprintf(fo,"%s.particles",fname);
+  s1=strlen(fname);
+  if(s1>200){
+    printf("emf_mie_ms.c, output_node_particles(), file name is too long. exit...\n");
+    exit(1);
   }
-  else {
-    s1=strlen(fname);
-    s2=strlen(sd);
-    strncpy(tmp,fname,s1-s2);
-    sprintf(fo,"%s.particles",tmp);
+  sprintf(fo,"%s",fname);
+  sd=strrchr(fo,'.');
+  if(sd!=NULL){
+    strncpy(tf,fname,s1-strlen(sd));
+    sprintf(fo,"%s.particles",tf);
   }
   
   if((fp=fopen(fo,"wt"))==NULL){    printf("Can not open the %s file.\n",fo);    exit(1);  }
@@ -249,35 +300,86 @@ void  read_dat_amsp(char *fn,AMSP *ms)
   int mn,i,nt,np;
   if((fp=fopen(fn,"rb"))==NULL){    printf("read_dat_amsp(), Failed to open the %s. Exit...\n",fn);    exit(1);  }
   
-  fread(ms,sizeof(AMSP),1,fp);
+  if(fread(ms,sizeof(AMSP),1,fp)!=1){
+    printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the ms. exit...\n");
+    exit(1);
+  }
   // beam data
   ms->aw.bd.pw=(Apw *)m_alloc2(ms->aw.n_pw,sizeof(Apw),"read_dat_amsp(),ms->aw.bd.pw");
-  fread(ms->aw.bd.pw,sizeof(Apw),ms->aw.n_pw,fp);
+  if(fread(ms->aw.bd.pw,sizeof(Apw),ms->aw.n_pw,fp)!=ms->aw.n_pw){
+    printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the ipw. exit...\n");
+    exit(1);
+  }
   ms->aw.bd.bb=(Abb *)m_alloc2(ms->aw.n_bb,sizeof(Abb),"read_dat_amsp(),ms->aw.bd.bb");
-  fread(ms->aw.bd.bb,sizeof(Abb),ms->aw.n_bb,fp);
+  if(fread(ms->aw.bd.bb,sizeof(Abb),ms->aw.n_bb,fp)!=ms->aw.n_bb){
+    printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the bb. exit...\n");
+    exit(1);
+  }
   ms->aw.bd.fb=(Afb *)m_alloc2(ms->aw.n_fb,sizeof(Afb),"read_dat_amsp(),ms->aw.bd.fb");
-  fread(ms->aw.bd.fb,sizeof(Afb),ms->aw.n_fb,fp);
+  if(fread(ms->aw.bd.fb,sizeof(Afb),ms->aw.n_fb,fp)!=ms->aw.n_fb){
+    printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the fb. exit...\n");
+    exit(1);
+  }
   setup_maw(&(ms->aw));
   // sphere data
   ms->sp=(ASP *)m_alloc2(ms->n_sphr,sizeof(ASP),"read_dat_amsp(),ms->sp");
-  fread(ms->sp,sizeof(ASP),ms->n_sphr,fp);
+  if(fread(ms->sp,sizeof(ASP),ms->n_sphr,fp)!=ms->n_sphr){
+    printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the sp. exit...\n");
+    exit(1);
+  }
   for(i=0;i<ms->n_sphr;i++){
     malloc_sp(&(ms->sp[i]));
     np=ms->sp[i].dd.np;
     nt=ms->sp[i].dd.nt;
     mn=ms->sp[i].l_limit;
-    fread(ms->sp[i].dd.xt,sizeof(double),nt,fp);
-    fread(ms->sp[i].dd.wt,sizeof(double),nt,fp);
-    fread(ms->sp[i].dd.ct,sizeof(double),nt,fp);
-    fread(ms->sp[i].dd.st,sizeof(double),nt,fp);
-    fread(ms->sp[i].dd.xp,sizeof(double),np,fp);
-    fread(ms->sp[i].dd.wp,sizeof(double),np,fp);
-    fread(ms->sp[i].dd.cp,sizeof(double),np,fp);
-    fread(ms->sp[i].dd.sp,sizeof(double),np,fp);
-    fread(ms->sp[i].dd.cai,sizeof(double),mn+1,fp);
-    fread(ms->sp[i].dd.cs,sizeof(double complex),mn+1,fp);
-    fread(ms->sp[i].dd.cw,sizeof(double complex),mn+1,fp);
-    fread(ms->sp[i].dd.ailm,sizeof(double complex),(mn+1)*(mn+1),fp);
+    if(fread(ms->sp[i].dd.xt,sizeof(double),nt,fp)!=nt){
+      printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the xt. exit...\n");
+      exit(1);
+    }
+    if(fread(ms->sp[i].dd.wt,sizeof(double),nt,fp)!=nt){
+      printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the wt. exit...\n");
+      exit(1);
+    }
+    if(fread(ms->sp[i].dd.ct,sizeof(double),nt,fp)!=nt){
+      printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the ct. exit...\n");
+      exit(1);
+    }
+    if(fread(ms->sp[i].dd.st,sizeof(double),nt,fp)!=nt){
+      printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the st. exit...\n");
+      exit(1);
+    }
+    if(fread(ms->sp[i].dd.xp,sizeof(double),np,fp)!=np){
+      printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the xp. exit...\n");
+      exit(1);
+    }
+    if(fread(ms->sp[i].dd.wp,sizeof(double),np,fp)!=np){
+      printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the wp. exit...\n");
+      exit(1);
+    }
+    if(fread(ms->sp[i].dd.cp,sizeof(double),np,fp)!=np){
+      printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the cp. exit...\n");
+      exit(1);
+    }
+    if(fread(ms->sp[i].dd.sp,sizeof(double),np,fp)!=np){
+      printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the sp. exit...\n");
+      exit(1);
+    }
+    if(fread(ms->sp[i].dd.cai,sizeof(double),mn+1,fp)!=mn+1){
+      printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the cai. exit...\n");
+      exit(1);
+    }
+    if(fread(ms->sp[i].dd.cs,sizeof(double complex),mn+1,fp)!=mn+1){
+      printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the cs. exit...\n");
+      exit(1);
+    }
+    if(fread(ms->sp[i].dd.cw,sizeof(double complex),mn+1,fp)!=mn+1){
+      printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the cw. exit...\n");
+      exit(1);
+    }
+    if(fread(ms->sp[i].dd.ailm,sizeof(double complex),(mn+1)*(mn+1),fp)!=(mn+1)*(mn+1)){
+      printf("aw_msp_ivf.c, read_dat_amsp(), failed to read the ailm. exit...\n");
+      exit(1);
+    }
   }
   fclose(fp); 
 }

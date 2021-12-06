@@ -1,15 +1,15 @@
-# Makefile for gcc  
-CC      =gcc
-CFLAGS  =-O3 -Wall
-LDFLAGS =-lm -lgsl -lgslcblas -lpng -lz
-MPFLAGS =-fopenmp
+# Makefile for Intel compiler
+CC      =icx
+CFLAGS  =-fast -Wall
+LDFLAGS =-lgsl -lgslcblas -lpng -lz
+MPFLAGS =-fiopenmp
 SRCDIR1 =../msp_src
 SRCDIR2 =../maw_src
 SRCDIR3 =../com_src
 OBJDIR  =../obj
 TARGET1 =aw_msp_solver
-TARGET2 =radiation_force2.out
-TRGSRC2 =radiation_force2.c
+TARGET2 =radiation_force1.out
+TRGSRC2 =radiation_force1.c
 
 SRCS1=$(wildcard $(SRCDIR1)/*.c)
 OBJS1=$(addprefix $(OBJDIR)/,$(patsubst %.c,%.o,$(notdir $(SRCS1)) ))

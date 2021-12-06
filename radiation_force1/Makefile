@@ -31,10 +31,10 @@ directories:
 	@mkdir -p $(OBJDIR)
 
 $(TARGET2) : $(TRGOBJ2)  
-	$(CC) $(LDFLAGS) $(MPFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(MPFLAGS)
 
 $(OBJDIR)/%.o : $(SRCDIR1)/%.c
-	$(CC) $(CFLAGS) $(MPFLAGS) -I$(SRCDIR2) -I$(SRCDIR3) -c $< -o $@
+	$(CC) $(CFLAGS) -I$(SRCDIR2) -I$(SRCDIR3) -c $< -o $@ $(MPFLAGS)
 
 $(OBJDIR)/%.o : $(SRCDIR2)/%.c
 	$(CC) $(CFLAGS) -I$(SRCDIR3) -c $< -o $@
@@ -43,7 +43,7 @@ $(OBJDIR)/%.o : $(SRCDIR3)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 .c.o :
-	$(CC) $(CFLAGS) $(MPFLAGS) -I$(SRCDIR1) -I$(SRCDIR2) -I$(SRCDIR3) -c $<
+	$(CC) $(CFLAGS) -I$(SRCDIR1) -I$(SRCDIR2) -I$(SRCDIR3) -c $< $(MPFLAGS) 
 
 clean:
 	@rm -rf $(TARGET2) $(OBJDIR) ./*.o
