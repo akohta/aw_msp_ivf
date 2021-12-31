@@ -6,14 +6,28 @@ int main(int argc,char *argv[])
   AMSP ms;
   FILE *fp1;
   double complex p,v[3];
-  double rang,dr,r[3],*ip;
-  int max,i,j,type;
+  double rang,dr,r[3],*ip,mf;
+  int max,i,j,type,sn;
+
+  if(argc!=2 && argc!=4){
+    printf("Usage : %s datafile_name [sampling_number multplier_factor](optional)\n",argv[0]);
+    printf("default sampling number 200, multiplier factor 3 (range is -3*lambda0 to 3*lambda0)\n");
+    exit(0);
+  }
+  else if(argc==4){
+    sn=atoi(argv[2]);
+    mf=atof(argv[3]);
+  }
+  else{
+    sn=200;
+    mf=3.0;
+  }
 
   read_dat_amsp(argv[1],&ms); // read datafile 
   print_data_amsp(&ms);       // print data 
 
-  max=200;
-  rang=3.0*ms.aw.lambda0;
+  max=sn;
+  rang=mf*ms.aw.lambda0;
   dr=rang*2.0/(double)(max-1);
   type=1; // type setting for total_field_amsp()
   
