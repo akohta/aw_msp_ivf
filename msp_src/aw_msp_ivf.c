@@ -213,6 +213,10 @@ void iterative_ops_amsp(AMSP *ms)
     for(t=0;t<num;t++) if(bc[t]<=0) sbc++;
     if(sbc==num) break;
   }
+  if(nn==ito_max){
+    printf("The number of iterations has reached the upper limit. The result has not converged.\n");
+  } 
+  printf("finished.\n");
 
   free(bc);  free(f0);
 }
